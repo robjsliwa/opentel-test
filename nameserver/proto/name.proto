@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package name;
+
+service Name {
+    rpc GetName (NameRequest) returns (NameResponse);
+}
+
+message NameRequest {}
+
+message NameResponse {
+    string name = 1;
+}
+
