@@ -3,6 +3,7 @@ mod name;
 use tonic::{transport::Server, Request, Response, Status};
 use name::name_server::{Name, NameServer};
 use name::{NameResponse, NameRequest};
+use std::collections::HashMap;
 
 #[derive(Default)]
 pub struct SidekickNames {}
@@ -10,8 +11,14 @@ pub struct SidekickNames {}
 #[tonic::async_trait]
 impl Name for SidekickNames {
     async fn get_name(&self, _: Request<NameRequest>) -> Result<Response<NameResponse>, Status> {
+        let resp = reqwest::get("http://localhost:8000/name")
+            .await
+            .map_err(|e| Status::unknown(format!("{}", e)))?
+            .json::<HashMap<String, String>>()
+            .await
+            .map_err(|e| Status::unknown(format!("{}", e)))?;
         Ok(Response::new(NameResponse{
-            name: String::from("Test name"),
+            name: resp.get(&"name".to_string()).unwrap().clone(),
         }))
     }
 }
