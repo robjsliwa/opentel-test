@@ -11,3 +11,19 @@ There are two servers:
 Client - is Go based client that call name server via GRPC to get sideckick name.
 
 Once you call using client you can open Jaeger UI on http://localhost:16686/ and you should be able to see traces and spans as shown below.
+
+![traces](https://github.com/robjsliwa/opentel-test/blob/main/docs/all_traces.png)
+
+![spans](https://github.com/robjsliwa/opentel-test/blob/main/docs/spans.png)
+
+# Build
+
+To setup servers:
+
+- docker-compose -f docker-compose.dev.yml up -d
+
+To build and run client:
+
+- cd client
+- go build
+- ./client
