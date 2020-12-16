@@ -19,3 +19,10 @@ services:
       - 8000:8000
     environment:
       - TRACE_HOST=jaeger
+  nameserver:
+    build: ./nameserver
+    ports:
+      - 60000:60000
+    environment:
+      - TRACE_HOST=jaeger
+      - SIDEKICK_HOST=sideckicknameserver

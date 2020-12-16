@@ -2,8 +2,12 @@ FROM node:14
 
 WORKDIR /var/opt/nameserver
 
-ADD build build
-ADD node_modules node_modules
-ADD package.json ./
+COPY ["package.json", "package-lock.json*", "./"]
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
 
 ENTRYPOINT node build/index.js

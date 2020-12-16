@@ -22,7 +22,7 @@ func main() {
 	defer tp()
 
 	tracer := global.Tracer("SidekickNameClient")
-	cc, err := grpc.Dial("[::1]:60000", grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpctrace.UnaryClientInterceptor(tracer)))
+	cc, err := grpc.Dial("127.0.0.1:60000", grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpctrace.UnaryClientInterceptor(tracer)))
 
 	if err != nil {
 		log.Fatalf("Connection error: %v", err)

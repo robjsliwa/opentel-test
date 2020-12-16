@@ -155,5 +155,5 @@ app.get("/name", (req, res) => {
   res.send({ name: `${selectedFirstName} ${selectedLastName}` });
 });
 app.listen(PORT, () => {
-  console.log("Server running...");
+  console.log(`Server running on port ${PORT}`);
 });
