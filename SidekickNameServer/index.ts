@@ -2,6 +2,11 @@ require("./tracing");
 
 import express from "express";
 import { json } from "body-parser";
+import { MeterProvider } from "@opentelemetry/metrics";
+import {
+  ExporterConfig,
+  PrometheusExporter,
+} from "@opentelemetry/exporter-prometheus";
 
 const app = express();
 const PORT = 8000;
@@ -146,12 +151,38 @@ const lastName = [
   "Woolysocks",
 ];
 
+const meter_host = process.env.METER_HOST
+  ? process.env.METER_HOST
+  : "localhost";
+const exporter = new PrometheusExporter({
+  endpoint: meter_host,
+  port: 9090,
+});
+const meter = new MeterProvider({
+  exporter,
+  interval: 1000,
+}).getMeter("SidekickNameServer");
+
+const requestCount = meter.createCounter("request_count", {
+  description: "Counts total number of requests",
+});
+// const errorCount = meter.createCounter("error_count", {
+//   description: "Counts total number of errors",
+// });
+const responseLatency = meter.createUpDownCounter("response_latency", {
+  description: "Records latency of response",
+});
+
 app.use(json());
 app.get("/name", (req, res) => {
+  const requestReceived = new Date().getTime();
+  requestCount.add(1);
   const selectedFirstName =
     firstName[Math.floor(Math.random() * firstName.length)];
   const selectedLastName =
     lastName[Math.floor(Math.random() * lastName.length)];
+  const measuredLatency = new Date().getTime() - requestReceived;
+  responseLatency.add(measuredLatency);
   res.send({ name: `${selectedFirstName} ${selectedLastName}` });
 });
 app.listen(PORT, () => {
