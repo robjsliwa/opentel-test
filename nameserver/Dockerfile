@@ -1,4 +1,4 @@
-FROM rust:latest as cargo-build
+FROM rust:1.48.0 as cargo-build
 
 WORKDIR /var/opt/app
 
@@ -6,7 +6,7 @@ RUN rustup component add rustfmt --toolchain 1.48.0-x86_64-unknown-linux-gnu
 
 COPY Cargo.toml Cargo.toml
 
-COPY Cargo.lock Cargo.lock
+# COPY Cargo.lock Cargo.lock
 
 RUN mkdir src/
 
